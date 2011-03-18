@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js" type="text/javascript"></script>
+		<script type="text/javascript">
+			$(function(){
+				$.getJSON('/user', function(result){
+					if(result.success){
+						$('#account').text(result.data.account);
+						$('#now-spot').text(result.data.spot);
+					}
+				});
+				
+				$('#update').click(function(){
+					$.getJSON('/spot', { spot: $('#spot').val() }, function(result){
+						if(result.success){
+							$('#now-spot').text(result.data.spot);
+							$('#spot').val('');
+						}
+					});
+				});
+				
+				$('#follow').click(function(){
+					$.getJSON('/follow', { follower: $('#follower').val() }, function(result){
+						if(result.success){
+							$('#follower').val('');
+						}
+					});
+				});
+				
+				$('#follower-refresh').click(function(){
+					$.getJSON('/follower', function(result){
+						if(result.success){
+							var table = $('#followers');
+							table.find('tr').remove();
+							$(result.data).each(function(){
+								table.append(
+									$('<tr></tr>')
+										.attr('id', this.key)
+										.append($('<td></td>').html(this.account))
+										.append($('<td></td>').html(':'))
+										.append($('<td></td>').html(this.spot))
+								);
+							});
+						}
+					});
+				});
+				
+				$('#followee-refresh').click(function(){
+					$.getJSON('/followee', function(result){
+						if(result.success){
+							var table = $('#followees');
+							table.find('tr').remove();
+							$(result.data).each(function(){
+								table.append(
+									$('<tr></tr>')
+										.attr('id', this.followee.key)
+										.append($('<td></td>').html(this.followee.account))
+										.append($('<td></td>').html(':'))
+										.append($('<td></td>').html(this.status))
+								);
+							});
+						}
+					});
+				});
+				
+			});
+		</script>
+		<title>dokoitter</title>
+	</head>
+	<body>
+		<h1>dokoitter</h1>
+		<p>Hi!! <span id="account"></span></p>
+		<p>now spot is <span id="now-spot"></span></p>
+		<div>
+			<input type="text" id="spot">
+			<button id="update">update spot</button>
+		</div>
+		<div>
+			<input type="text" id="follower">
+			<button id="follow">follow</button>
+		</div>
+		<p><u>follower</u><button id="follower-refresh">refresh</button></p>
+		<table id="followers"></table>
+		<p><u>followee</u><button id="followee-refresh">refresh</button></p>
+		<table id="followees"></table>
+	</body>
+</html>
