@@ -22,7 +22,6 @@ public class JsonService {
 	private JSON json = new JSON() {
 		// フォーマット可能なクラスに変換します（formatでのみ有効です）。
 		// 例外が発生した場合、JSONExceptionでラップされ呼び出し元に通知されます。
-		@SuppressWarnings("unchecked")
 		protected Object preformat(Context context, Object value)
 				throws Exception {
 			if(value instanceof Key){
@@ -32,11 +31,11 @@ public class JsonService {
 				return new SimpleDateFormat(TIME_STAMP_FORMAT).format((Date)value);
 			}
 			if(value instanceof ModelRef){
-				ModelRef modelRef = (ModelRef)value;
+				ModelRef<?> modelRef = (ModelRef<?>)value;
 				return modelRef.getModelClass().cast(modelRef.getModel());
 			}
 			if(value instanceof Enum){
-				return ((Enum)value).name();
+				return ((Enum<?>)value).name();
 			}
 			
 			return super.preformat(context, value);
