@@ -1,20 +1,20 @@
 package com.appspot.dokoitter.server.meta;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2011-03-19 12:35:04")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2011-03-19 16:21:43")
 /** */
 public final class UserMeta extends org.slim3.datastore.ModelMeta<com.appspot.dokoitter.server.model.User> {
-
-    /** */
-    public final org.slim3.datastore.StringAttributeMeta<com.appspot.dokoitter.server.model.User> account = new org.slim3.datastore.StringAttributeMeta<com.appspot.dokoitter.server.model.User>(this, "account", "account");
 
     /** */
     public final org.slim3.datastore.CoreAttributeMeta<com.appspot.dokoitter.server.model.User, com.google.appengine.api.datastore.Key> key = new org.slim3.datastore.CoreAttributeMeta<com.appspot.dokoitter.server.model.User, com.google.appengine.api.datastore.Key>(this, "__key__", "key", com.google.appengine.api.datastore.Key.class);
 
     /** */
-    public final org.slim3.datastore.StringAttributeMeta<com.appspot.dokoitter.server.model.User> spot = new org.slim3.datastore.StringAttributeMeta<com.appspot.dokoitter.server.model.User>(this, "spot", "spot");
+    public final org.slim3.datastore.CoreAttributeMeta<com.appspot.dokoitter.server.model.User, java.lang.Long> version = new org.slim3.datastore.CoreAttributeMeta<com.appspot.dokoitter.server.model.User, java.lang.Long>(this, "version", "version", java.lang.Long.class);
 
     /** */
-    public final org.slim3.datastore.CoreAttributeMeta<com.appspot.dokoitter.server.model.User, java.lang.Long> version = new org.slim3.datastore.CoreAttributeMeta<com.appspot.dokoitter.server.model.User, java.lang.Long>(this, "version", "version", java.lang.Long.class);
+    public final org.slim3.datastore.StringAttributeMeta<com.appspot.dokoitter.server.model.User> account = new org.slim3.datastore.StringAttributeMeta<com.appspot.dokoitter.server.model.User>(this, "account", "account");
+
+    /** */
+    public final org.slim3.datastore.StringAttributeMeta<com.appspot.dokoitter.server.model.User> spot = new org.slim3.datastore.StringAttributeMeta<com.appspot.dokoitter.server.model.User>(this, "spot", "spot");
 
     private static final UserMeta slim3_singleton = new UserMeta();
 
@@ -33,10 +33,10 @@ public final class UserMeta extends org.slim3.datastore.ModelMeta<com.appspot.do
     @Override
     public com.appspot.dokoitter.server.model.User entityToModel(com.google.appengine.api.datastore.Entity entity) {
         com.appspot.dokoitter.server.model.User model = new com.appspot.dokoitter.server.model.User();
-        model.setAccount((java.lang.String) entity.getProperty("account"));
         model.setKey(entity.getKey());
-        model.setSpot((java.lang.String) entity.getProperty("spot"));
         model.setVersion((java.lang.Long) entity.getProperty("version"));
+        model.setAccount((java.lang.String) entity.getProperty("account"));
+        model.setSpot((java.lang.String) entity.getProperty("spot"));
         return model;
     }
 
@@ -49,9 +49,9 @@ public final class UserMeta extends org.slim3.datastore.ModelMeta<com.appspot.do
         } else {
             entity = new com.google.appengine.api.datastore.Entity(kind);
         }
+        entity.setProperty("version", m.getVersion());
         entity.setProperty("account", m.getAccount());
         entity.setProperty("spot", m.getSpot());
-        entity.setProperty("version", m.getVersion());
         entity.setProperty("slim3.schemaVersion", 1);
         return entity;
     }
@@ -110,25 +110,25 @@ public final class UserMeta extends org.slim3.datastore.ModelMeta<com.appspot.do
         com.appspot.dokoitter.server.model.User m = (com.appspot.dokoitter.server.model.User) model;
         writer.beginObject();
         org.slim3.datastore.json.JsonCoder encoder = null;
-        if(m.getAccount() != null){
-            writer.setNextPropertyName("account");
-            encoder = new org.slim3.datastore.json.Default();
-            encoder.encode(writer, m.getAccount());
-        }
         if(m.getKey() != null){
             writer.setNextPropertyName("key");
             encoder = new org.slim3.datastore.json.Default();
             encoder.encode(writer, m.getKey());
         }
-        if(m.getSpot() != null){
-            writer.setNextPropertyName("spot");
-            encoder = new org.slim3.datastore.json.Default();
-            encoder.encode(writer, m.getSpot());
-        }
         if(m.getVersion() != null){
             writer.setNextPropertyName("version");
             encoder = new org.slim3.datastore.json.Default();
             encoder.encode(writer, m.getVersion());
+        }
+        if(m.getAccount() != null){
+            writer.setNextPropertyName("account");
+            encoder = new org.slim3.datastore.json.Default();
+            encoder.encode(writer, m.getAccount());
+        }
+        if(m.getSpot() != null){
+            writer.setNextPropertyName("spot");
+            encoder = new org.slim3.datastore.json.Default();
+            encoder.encode(writer, m.getSpot());
         }
         writer.endObject();
     }
@@ -138,18 +138,18 @@ public final class UserMeta extends org.slim3.datastore.ModelMeta<com.appspot.do
         com.appspot.dokoitter.server.model.User m = new com.appspot.dokoitter.server.model.User();
         org.slim3.datastore.json.JsonReader reader = null;
         org.slim3.datastore.json.JsonCoder decoder = null;
-        reader = rootReader.newObjectReader("account");
-        decoder = new org.slim3.datastore.json.Default();
-        m.setAccount(decoder.decode(reader, m.getAccount()));
         reader = rootReader.newObjectReader("key");
         decoder = new org.slim3.datastore.json.Default();
         m.setKey(decoder.decode(reader, m.getKey()));
-        reader = rootReader.newObjectReader("spot");
-        decoder = new org.slim3.datastore.json.Default();
-        m.setSpot(decoder.decode(reader, m.getSpot()));
         reader = rootReader.newObjectReader("version");
         decoder = new org.slim3.datastore.json.Default();
         m.setVersion(decoder.decode(reader, m.getVersion()));
+        reader = rootReader.newObjectReader("account");
+        decoder = new org.slim3.datastore.json.Default();
+        m.setAccount(decoder.decode(reader, m.getAccount()));
+        reader = rootReader.newObjectReader("spot");
+        decoder = new org.slim3.datastore.json.Default();
+        m.setSpot(decoder.decode(reader, m.getSpot()));
         return m;
     }
 }

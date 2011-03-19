@@ -1,17 +1,14 @@
 package com.appspot.dokoitter.server.meta;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2011-03-19 12:35:05")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2011-03-19 16:21:43")
 /** */
 public final class FollowMeta extends org.slim3.datastore.ModelMeta<com.appspot.dokoitter.server.model.Follow> {
-
-    /** */
-    public final org.slim3.datastore.ModelRefAttributeMeta<com.appspot.dokoitter.server.model.Follow, org.slim3.datastore.ModelRef<com.appspot.dokoitter.server.model.User>, com.appspot.dokoitter.server.model.User> followerRef = new org.slim3.datastore.ModelRefAttributeMeta<com.appspot.dokoitter.server.model.Follow, org.slim3.datastore.ModelRef<com.appspot.dokoitter.server.model.User>, com.appspot.dokoitter.server.model.User>(this, "followerRef", "followerRef", org.slim3.datastore.ModelRef.class, com.appspot.dokoitter.server.model.User.class);
 
     /** */
     public final org.slim3.datastore.CoreAttributeMeta<com.appspot.dokoitter.server.model.Follow, com.google.appengine.api.datastore.Key> key = new org.slim3.datastore.CoreAttributeMeta<com.appspot.dokoitter.server.model.Follow, com.google.appengine.api.datastore.Key>(this, "__key__", "key", com.google.appengine.api.datastore.Key.class);
 
     /** */
-    public final org.slim3.datastore.StringAttributeMeta<com.appspot.dokoitter.server.model.Follow> lastSpot = new org.slim3.datastore.StringAttributeMeta<com.appspot.dokoitter.server.model.Follow>(this, "lastSpot", "lastSpot");
+    public final org.slim3.datastore.CoreAttributeMeta<com.appspot.dokoitter.server.model.Follow, java.lang.Long> version = new org.slim3.datastore.CoreAttributeMeta<com.appspot.dokoitter.server.model.Follow, java.lang.Long>(this, "version", "version", java.lang.Long.class);
 
     /** */
     public final org.slim3.datastore.CoreAttributeMeta<com.appspot.dokoitter.server.model.Follow, com.appspot.dokoitter.server.model.Follow.Status> status = new org.slim3.datastore.CoreAttributeMeta<com.appspot.dokoitter.server.model.Follow, com.appspot.dokoitter.server.model.Follow.Status>(this, "status", "status", com.appspot.dokoitter.server.model.Follow.Status.class);
@@ -20,7 +17,10 @@ public final class FollowMeta extends org.slim3.datastore.ModelMeta<com.appspot.
     public final org.slim3.datastore.ModelRefAttributeMeta<com.appspot.dokoitter.server.model.Follow, org.slim3.datastore.ModelRef<com.appspot.dokoitter.server.model.User>, com.appspot.dokoitter.server.model.User> userRef = new org.slim3.datastore.ModelRefAttributeMeta<com.appspot.dokoitter.server.model.Follow, org.slim3.datastore.ModelRef<com.appspot.dokoitter.server.model.User>, com.appspot.dokoitter.server.model.User>(this, "userRef", "userRef", org.slim3.datastore.ModelRef.class, com.appspot.dokoitter.server.model.User.class);
 
     /** */
-    public final org.slim3.datastore.CoreAttributeMeta<com.appspot.dokoitter.server.model.Follow, java.lang.Long> version = new org.slim3.datastore.CoreAttributeMeta<com.appspot.dokoitter.server.model.Follow, java.lang.Long>(this, "version", "version", java.lang.Long.class);
+    public final org.slim3.datastore.ModelRefAttributeMeta<com.appspot.dokoitter.server.model.Follow, org.slim3.datastore.ModelRef<com.appspot.dokoitter.server.model.User>, com.appspot.dokoitter.server.model.User> followerRef = new org.slim3.datastore.ModelRefAttributeMeta<com.appspot.dokoitter.server.model.Follow, org.slim3.datastore.ModelRef<com.appspot.dokoitter.server.model.User>, com.appspot.dokoitter.server.model.User>(this, "followerRef", "followerRef", org.slim3.datastore.ModelRef.class, com.appspot.dokoitter.server.model.User.class);
+
+    /** */
+    public final org.slim3.datastore.StringAttributeMeta<com.appspot.dokoitter.server.model.Follow> lastSpot = new org.slim3.datastore.StringAttributeMeta<com.appspot.dokoitter.server.model.Follow>(this, "lastSpot", "lastSpot");
 
     private static final FollowMeta slim3_singleton = new FollowMeta();
 
@@ -39,18 +39,18 @@ public final class FollowMeta extends org.slim3.datastore.ModelMeta<com.appspot.
     @Override
     public com.appspot.dokoitter.server.model.Follow entityToModel(com.google.appengine.api.datastore.Entity entity) {
         com.appspot.dokoitter.server.model.Follow model = new com.appspot.dokoitter.server.model.Follow();
-        if (model.getFollowerRef() == null) {
-            throw new NullPointerException("The property(followerRef) is null.");
-        }
-        model.getFollowerRef().setKey((com.google.appengine.api.datastore.Key) entity.getProperty("followerRef"));
         model.setKey(entity.getKey());
-        model.setLastSpot((java.lang.String) entity.getProperty("lastSpot"));
+        model.setVersion((java.lang.Long) entity.getProperty("version"));
         model.setStatus(stringToEnum(com.appspot.dokoitter.server.model.Follow.Status.class, (java.lang.String) entity.getProperty("status")));
         if (model.getUserRef() == null) {
             throw new NullPointerException("The property(userRef) is null.");
         }
         model.getUserRef().setKey((com.google.appengine.api.datastore.Key) entity.getProperty("userRef"));
-        model.setVersion((java.lang.Long) entity.getProperty("version"));
+        if (model.getFollowerRef() == null) {
+            throw new NullPointerException("The property(followerRef) is null.");
+        }
+        model.getFollowerRef().setKey((com.google.appengine.api.datastore.Key) entity.getProperty("followerRef"));
+        model.setLastSpot((java.lang.String) entity.getProperty("lastSpot"));
         return model;
     }
 
@@ -63,17 +63,17 @@ public final class FollowMeta extends org.slim3.datastore.ModelMeta<com.appspot.
         } else {
             entity = new com.google.appengine.api.datastore.Entity(kind);
         }
-        if (m.getFollowerRef() == null) {
-            throw new NullPointerException("The property(followerRef) must not be null.");
-        }
-        entity.setProperty("followerRef", m.getFollowerRef().getKey());
-        entity.setProperty("lastSpot", m.getLastSpot());
+        entity.setProperty("version", m.getVersion());
         entity.setProperty("status", enumToString(m.getStatus()));
         if (m.getUserRef() == null) {
             throw new NullPointerException("The property(userRef) must not be null.");
         }
         entity.setProperty("userRef", m.getUserRef().getKey());
-        entity.setProperty("version", m.getVersion());
+        if (m.getFollowerRef() == null) {
+            throw new NullPointerException("The property(followerRef) must not be null.");
+        }
+        entity.setProperty("followerRef", m.getFollowerRef().getKey());
+        entity.setProperty("lastSpot", m.getLastSpot());
         entity.setProperty("slim3.schemaVersion", 1);
         return entity;
     }
@@ -100,14 +100,14 @@ public final class FollowMeta extends org.slim3.datastore.ModelMeta<com.appspot.
     @Override
     protected void assignKeyToModelRefIfNecessary(com.google.appengine.api.datastore.AsyncDatastoreService ds, java.lang.Object model) {
         com.appspot.dokoitter.server.model.Follow m = (com.appspot.dokoitter.server.model.Follow) model;
-        if (m.getFollowerRef() == null) {
-            throw new NullPointerException("The property(followerRef) must not be null.");
-        }
-        m.getFollowerRef().assignKeyIfNecessary(ds);
         if (m.getUserRef() == null) {
             throw new NullPointerException("The property(userRef) must not be null.");
         }
         m.getUserRef().assignKeyIfNecessary(ds);
+        if (m.getFollowerRef() == null) {
+            throw new NullPointerException("The property(followerRef) must not be null.");
+        }
+        m.getFollowerRef().assignKeyIfNecessary(ds);
     }
 
     @Override
@@ -141,20 +141,15 @@ public final class FollowMeta extends org.slim3.datastore.ModelMeta<com.appspot.
         com.appspot.dokoitter.server.model.Follow m = (com.appspot.dokoitter.server.model.Follow) model;
         writer.beginObject();
         org.slim3.datastore.json.JsonCoder encoder = null;
-        if(m.getFollowerRef() != null && m.getFollowerRef().getKey() != null){
-            writer.setNextPropertyName("followerRef");
-            encoder = new org.slim3.datastore.json.Default();
-            encoder.encode(writer, m.getFollowerRef(), maxDepth, currentDepth);
-        }
         if(m.getKey() != null){
             writer.setNextPropertyName("key");
             encoder = new org.slim3.datastore.json.Default();
             encoder.encode(writer, m.getKey());
         }
-        if(m.getLastSpot() != null){
-            writer.setNextPropertyName("lastSpot");
+        if(m.getVersion() != null){
+            writer.setNextPropertyName("version");
             encoder = new org.slim3.datastore.json.Default();
-            encoder.encode(writer, m.getLastSpot());
+            encoder.encode(writer, m.getVersion());
         }
         if(m.getStatus() != null){
             writer.setNextPropertyName("status");
@@ -166,10 +161,15 @@ public final class FollowMeta extends org.slim3.datastore.ModelMeta<com.appspot.
             encoder = new org.slim3.datastore.json.Default();
             encoder.encode(writer, m.getUserRef(), maxDepth, currentDepth);
         }
-        if(m.getVersion() != null){
-            writer.setNextPropertyName("version");
+        if(m.getFollowerRef() != null && m.getFollowerRef().getKey() != null){
+            writer.setNextPropertyName("followerRef");
             encoder = new org.slim3.datastore.json.Default();
-            encoder.encode(writer, m.getVersion());
+            encoder.encode(writer, m.getFollowerRef(), maxDepth, currentDepth);
+        }
+        if(m.getLastSpot() != null){
+            writer.setNextPropertyName("lastSpot");
+            encoder = new org.slim3.datastore.json.Default();
+            encoder.encode(writer, m.getLastSpot());
         }
         writer.endObject();
     }
@@ -179,24 +179,24 @@ public final class FollowMeta extends org.slim3.datastore.ModelMeta<com.appspot.
         com.appspot.dokoitter.server.model.Follow m = new com.appspot.dokoitter.server.model.Follow();
         org.slim3.datastore.json.JsonReader reader = null;
         org.slim3.datastore.json.JsonCoder decoder = null;
-        reader = rootReader.newObjectReader("followerRef");
-        decoder = new org.slim3.datastore.json.Default();
-        decoder.decode(reader, m.getFollowerRef(), maxDepth, currentDepth);
         reader = rootReader.newObjectReader("key");
         decoder = new org.slim3.datastore.json.Default();
         m.setKey(decoder.decode(reader, m.getKey()));
-        reader = rootReader.newObjectReader("lastSpot");
+        reader = rootReader.newObjectReader("version");
         decoder = new org.slim3.datastore.json.Default();
-        m.setLastSpot(decoder.decode(reader, m.getLastSpot()));
+        m.setVersion(decoder.decode(reader, m.getVersion()));
         reader = rootReader.newObjectReader("status");
         decoder = new org.slim3.datastore.json.Default();
         m.setStatus(decoder.decode(reader, m.getStatus(), com.appspot.dokoitter.server.model.Follow.Status.class));
         reader = rootReader.newObjectReader("userRef");
         decoder = new org.slim3.datastore.json.Default();
         decoder.decode(reader, m.getUserRef(), maxDepth, currentDepth);
-        reader = rootReader.newObjectReader("version");
+        reader = rootReader.newObjectReader("followerRef");
         decoder = new org.slim3.datastore.json.Default();
-        m.setVersion(decoder.decode(reader, m.getVersion()));
+        decoder.decode(reader, m.getFollowerRef(), maxDepth, currentDepth);
+        reader = rootReader.newObjectReader("lastSpot");
+        decoder = new org.slim3.datastore.json.Default();
+        m.setLastSpot(decoder.decode(reader, m.getLastSpot()));
         return m;
     }
 }

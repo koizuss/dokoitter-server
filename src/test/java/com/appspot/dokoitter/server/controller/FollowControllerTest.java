@@ -5,6 +5,7 @@ import org.slim3.tester.ControllerTestCase;
 import org.junit.Test;
 
 import com.appspot.dokoitter.server.controller.FollowController;
+import com.appspot.dokoitter.server.meta.UserMeta;
 import com.appspot.dokoitter.server.model.User;
 import com.appspot.dokoitter.server.service.GoogleAuthService;
 
@@ -15,17 +16,18 @@ public class FollowControllerTest extends ControllerTestCase {
 
     @Test
     public void run() throws Exception {
-    	User user = new User();
-    	user.setAccount("user");
+    	String account1 = "account1";
+    	String account2 = "account2";
+    	User user1 = new User();
+    	user1.setAccount(account1);
+    	User user2 = new User();
+    	user2.setAccount(account2);
     	
-    	User follower = new User();
-    	follower.setAccount("follower");
+    	Datastore.put(user1, user2);
     	
-    	Datastore.put(user, follower);
+    	tester.environment.setEmail(GoogleAuthService.getEmail(account1));
+    	tester.request.setAttribute(UserMeta.get().account.toString(), account2);
     	
-    	tester.environment.setEmail(GoogleAuthService.getEmail(user.getAccount()));
-    	
-    	tester.request.addParameter("key", Datastore.keyToString(follower.getKey()));
         tester.start("/follow");
         FollowController controller = tester.getController();
         assertThat(controller, is(notNullValue()));

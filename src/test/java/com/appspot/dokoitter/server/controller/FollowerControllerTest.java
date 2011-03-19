@@ -17,23 +17,22 @@ public class FollowerControllerTest extends ControllerTestCase {
 	@Test
     public void run() throws Exception {
     	String account = "test-account";
+    	tester.environment.setEmail(GoogleAuthService.getEmail(account));
+    	
+    	String followerAccount = "follower-account";
+    	
     	User user = new User();
     	user.setAccount(account);
-    	Datastore.put(user);
+    	User follower = new User();
+    	follower.setAccount(followerAccount);
+    	Follow follow = new Follow();
+    	follow.getUserRef().setModel(user);
+    	follow.getFollowerRef().setModel(follower);
     	
-    	tester.environment.setEmail(GoogleAuthService.getEmail(account)); 
-    	
-    	Follow follower1 = new Follow();
-    	follower1.getUserRef().setModel(user);
-    	
-    	Follow follower2 = new Follow();
-    	follower2.getUserRef().setModel(user);
-    	follower2.setStatus(Follow.Status.SENDED);
-    	
-    	Datastore.put(user, follower1, follower2);
-    	
+    	Datastore.put(user, follower, follow);
     	tester.start("/follower");
-        FollowerController controller = tester.getController();
+        
+    	FollowerController controller = tester.getController();
         assertThat(controller, is(notNullValue()));
         assertThat(tester.isRedirect(), is(false));
         assertThat(tester.getDestinationPath(), is(nullValue()));
