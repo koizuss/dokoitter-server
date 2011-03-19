@@ -1,11 +1,14 @@
 package com.appspot.dokoitter.server.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import com.google.appengine.api.datastore.Key;
 
 import org.slim3.datastore.Attribute;
+import org.slim3.datastore.CreationDate;
 import org.slim3.datastore.Model;
+import org.slim3.datastore.ModificationDate;
 
 @Model(schemaVersion = 1)
 public class User implements Serializable {
@@ -21,6 +24,12 @@ public class User implements Serializable {
     private String account;
     private String spot;
 
+    @Attribute(listener = CreationDate.class)
+    private Date createAt;
+    
+    @Attribute(listener = ModificationDate.class)
+    private Date updatedAt;
+    
     /**
 	 * @param account the account to set
 	 */
@@ -47,6 +56,22 @@ public class User implements Serializable {
 	 */
 	public String getSpot() {
 		return spot;
+	}
+
+	public void setCreateAt(Date createAt) {
+		this.createAt = createAt;
+	}
+
+	public Date getCreateAt() {
+		return createAt;
+	}
+
+	public void setUpdatedAt(Date updatedAt) {
+		this.updatedAt = updatedAt;
+	}
+
+	public Date getUpdatedAt() {
+		return updatedAt;
 	}
 
 	/**

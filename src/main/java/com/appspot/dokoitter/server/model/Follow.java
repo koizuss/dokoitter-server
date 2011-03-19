@@ -1,12 +1,15 @@
 package com.appspot.dokoitter.server.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import com.google.appengine.api.datastore.Key;
 
 import org.slim3.datastore.Attribute;
+import org.slim3.datastore.CreationDate;
 import org.slim3.datastore.Model;
 import org.slim3.datastore.ModelRef;
+import org.slim3.datastore.ModificationDate;
 
 @Model(schemaVersion = 1)
 public class Follow implements Serializable {
@@ -29,6 +32,12 @@ public class Follow implements Serializable {
     private ModelRef<User> userRef = new ModelRef<User>(User.class);
     private ModelRef<User> followerRef = new ModelRef<User>(User.class);
     private String lastSpot;
+    
+    @Attribute(listener = CreationDate.class)
+    private Date createAt;
+    
+    @Attribute(listener = ModificationDate.class)
+    private Date updatedAt;
 
     /**
 	 * @param status the status to set
@@ -70,6 +79,22 @@ public class Follow implements Serializable {
 	 */
 	public String getLastSpot() {
 		return lastSpot;
+	}
+
+	public void setCreateAt(Date createAt) {
+		this.createAt = createAt;
+	}
+
+	public Date getCreateAt() {
+		return createAt;
+	}
+
+	public void setUpdatedAt(Date updatedAt) {
+		this.updatedAt = updatedAt;
+	}
+
+	public Date getUpdatedAt() {
+		return updatedAt;
 	}
 
 	/**
