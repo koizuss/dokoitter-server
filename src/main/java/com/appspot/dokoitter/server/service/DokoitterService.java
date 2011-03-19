@@ -12,12 +12,13 @@ import com.appspot.dokoitter.server.model.Follow;
 import com.appspot.dokoitter.server.model.User;
 import com.appspot.dokoitter.server.meta.FollowMeta;
 import com.appspot.dokoitter.server.meta.UserMeta;
+import com.google.appengine.api.datastore.Key;
 
 public class DokoitterService {
 
 	public User getUser(String account) {
-		List<User> users = Datastore.query(User.class).filter(
-				UserMeta.get().account.equal(account)).asList();
+		List<User> users = Datastore.query(User.class)
+				.filter(UserMeta.get().account.equal(account)).asList();
 
 		if (users.size() < 1) {
 			throw new IllegalStateException("user not found");
@@ -44,22 +45,27 @@ public class DokoitterService {
 		}
 	}
 
-	public Follow putFollow(String account, String followerAccount) throws Exception {
+	public Void putFollow(String account, String followerAccount)
+			throws Exception {
+
+		if (account.equals(followerAccount)) {
+			throw new IllegalStateException("same account");
+		}
 
 		User user = getUser(account);
-		
-		User follower;
-		try{
+
+		User follower = null;
+		try {
 			follower = getUser(followerAccount);
-		}catch (IllegalStateException e) {
-			throw new IllegalStateException("follower not found", e);
+		} catch (Exception e) {
+			throw new IllegalStateException("follower not found");
 		}
 
 		Follow follow = new Follow();
 		follow.getUserRef().setModel(user);
 		follow.getFollowerRef().setModel(follower);
 
-		String uniqueValue = account + ">" + followerAccount;
+		String uniqueValue = follow.getUniqueValue();
 
 		if (!Datastore.putUniqueValue(Follow.class.toString(), uniqueValue)) {
 			throw new IllegalStateException("exists follow");
@@ -67,64 +73,94 @@ public class DokoitterService {
 
 		try {
 			Datastore.put(follow);
-			return follow;
 		} catch (Exception e) {
 			Datastore.deleteUniqueValue(Follow.class.toString(), uniqueValue);
 			throw e;
 		}
+
+		return null;
+	}
+	
+	public Void deleteFollow(String account, Key key){
+		User user = getUser(account);
+		FollowMeta followMeta = FollowMeta.get();
+		for(Follow follow : Datastore.query(Follow.class)
+								.filter(followMeta.userRef.equal(user.getKey()),
+										followMeta.key.equal(key))
+								.asList()){
+			GlobalTransaction gtx = Datastore.beginGlobalTransaction();
+			gtx.delete(follow.getKey());
+			Datastore.deleteUniqueValue(Follow.class.toString(), follow.getUniqueValue());
+			gtx.commit();
+		}
+		return null;
 	}
 
-	public List<User> getFollower(String account) {
+	public List<Map<?, ?>> getFollower(String account) {
 		User user = getUser(account);
-		List<User> followers = new ArrayList<User>();
+		List<Map<?, ?>> followers = new ArrayList<Map<?, ?>>();
+		UserMeta userMeta = UserMeta.get();
+		FollowMeta followMeta = FollowMeta.get();
 
-		for (Follow follow : Datastore.query(Follow.class).filter(
-				FollowMeta.get().userRef.equal(user.getKey())).asList()) {
+		for (Follow follow : Datastore.query(Follow.class)
+				.filter(FollowMeta.get().userRef.equal(user.getKey())).asList()) {
 
 			User follower = follow.getFollowerRef().getModel();
-			Follow.Status status = follow.getStatus();
 
-			if (status.equals(Follow.Status.PENDING)) {
-				follower.setSpot(Follow.Status.PENDING.name());
-			} else if (status.equals(Follow.Status.STOPED)) {
-				follower.setSpot(follow.getLastSpot());
-			}
-
-			followers.add(follower);
+			Map<Object, Object> followerData = new HashMap<Object, Object>();
+			followerData.put(followMeta.key, follow.getKey());
+			followerData.put(followMeta.status,
+								(follow.getStatus() == Follow.Status.PENDING ?
+									Follow.Status.PENDING : Follow.Status.SENDED));
+			followerData.put(userMeta.account, follower.getAccount());
+			followerData.put(userMeta.spot,
+				(follow.getStatus() == Follow.Status.SENDED ? follower.getSpot() :
+					follow.getStatus() == Follow.Status.STOPED ? follow.getLastSpot() : ""));
+			followerData.put(userMeta.updatedAt, follower.getUpdatedAt());
+			
+			followers.add(followerData);
 		}
 
 		return followers;
 	}
 
-	public List<Map<String, Object>> getFollowee(String account) {
+	public List<Map<?, ?>> getFollowee(String account) {
 		User user = getUser(account);
 		UserMeta userMeta = UserMeta.get();
 		FollowMeta followMeta = FollowMeta.get();
-		List<Map<String, Object>> followees = new ArrayList<Map<String, Object>>();
-		for (Follow follow : Datastore.query(Follow.class).filter(
-				followMeta.followerRef.equal(user.getKey())).asList()) {
-			Map<String, Object> followee = new HashMap<String, Object>();
-			followee.put(userMeta.account.getName(), follow.getUserRef().getModel());
-			followee.put(followMeta.status.getName(), follow.getStatus());
-			followees.add(followee);
+		List<Map<?, ?>> followees = new ArrayList<Map<?, ?>>();
+		for (Follow follow : Datastore.query(Follow.class)
+				.filter(followMeta.followerRef.equal(user.getKey())).asList()) {
+			
+			User followee = follow.getUserRef().getModel();
+			
+			Map<Object, Object> followeeData = new HashMap<Object, Object>();
+			followeeData.put(followMeta.key, follow.getKey());
+			followeeData.put(followMeta.status, follow.getStatus());
+			followeeData.put(userMeta.account, followee.getAccount());
+			followeeData.put(userMeta.updatedAt, followee.getUpdatedAt());
+			
+			followees.add(followeeData);
 		}
 
 		return followees;
 	}
 
-	public User updateSpot(String account, String spot) {
+	public Void updateSpot(String account, String spot) {
 		User user = getUser(account);
 		user.setSpot(spot);
 		Datastore.put(user);
-		return user;
+		return null;
 	}
 
-	public Follow changeFollowStatus(String account, String key,
+	public Void changeFollowStatus(String account, Key key,
 			Follow.Status status) {
-		GlobalTransaction gtx = Datastore.beginGlobalTransaction();
-		Follow follow = gtx.get(Follow.class, Datastore.stringToKey(key));
 		User user = getUser(account);
-
+		
+		GlobalTransaction gtx = Datastore.beginGlobalTransaction();
+		Follow follow = gtx.get(Follow.class, key);
+		// TODO:followがなかった場合の対応検討
+		
 		if (!user.getKey().equals(follow.getFollowerRef().getKey())) {
 			throw new IllegalStateException("authority failed");
 		}
@@ -132,13 +168,13 @@ public class DokoitterService {
 		if ((follow.getStatus() != Follow.Status.SENDED && status == Follow.Status.SENDED)
 				|| (follow.getStatus() == Follow.Status.SENDED && status == Follow.Status.STOPED)) {
 			follow.setStatus(status);
-			if(status == Follow.Status.STOPED){
+			if (status == Follow.Status.STOPED) {
 				follow.setLastSpot(user.getSpot());
 			}
 			gtx.put(follow);
 			gtx.commit();
 		}
 
-		return follow;
+		return null;
 	}
 }

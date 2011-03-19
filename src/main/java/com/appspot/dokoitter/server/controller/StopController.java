@@ -8,7 +8,7 @@ public class StopController extends AbstractController {
 
 	@Override
 	protected Object getResponseData() throws Exception {
-		return service.changeFollowStatus(account,
-				asString(FollowMeta.get().key), Status.STOPED);
+		return service.changeFollowStatus(account, asKey(FollowMeta.get().key),
+				Status.STOPED);
 	}
 }

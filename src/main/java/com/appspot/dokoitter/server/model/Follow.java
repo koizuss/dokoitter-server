@@ -14,33 +14,37 @@ import org.slim3.datastore.ModificationDate;
 @Model(schemaVersion = 1)
 public class Follow implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    
-    public enum Status{
-    	PENDING,
-    	SENDED,
-    	STOPED
-    }
+	private static final long serialVersionUID = 1L;
 
-    @Attribute(primaryKey = true)
-    private Key key;
+	public enum Status {
+		PENDING, SENDED, STOPED,
+	}
 
-    @Attribute(version = true)
-    private Long version;
-    
-    private Status status = Status.PENDING;
-    private ModelRef<User> userRef = new ModelRef<User>(User.class);
-    private ModelRef<User> followerRef = new ModelRef<User>(User.class);
-    private String lastSpot;
-    
-    @Attribute(listener = CreationDate.class)
-    private Date createAt;
-    
-    @Attribute(listener = ModificationDate.class)
-    private Date updatedAt;
+	@Attribute(primaryKey = true)
+	private Key key;
 
-    /**
-	 * @param status the status to set
+	@Attribute(version = true)
+	private Long version;
+
+	private Status status = Status.PENDING;
+	private ModelRef<User> userRef = new ModelRef<User>(User.class);
+	private ModelRef<User> followerRef = new ModelRef<User>(User.class);
+	private String lastSpot;
+
+	@Attribute(listener = CreationDate.class)
+	private Date createAt;
+
+	@Attribute(listener = ModificationDate.class)
+	private Date updatedAt;
+	
+	public String getUniqueValue(){
+		return this.userRef.getModel().getAccount()
+				+ ">"  + this.followerRef.getModel().getAccount();
+	}
+
+	/**
+	 * @param status
+	 *            the status to set
 	 */
 	public void setStatus(Status status) {
 		this.status = status;
@@ -68,7 +72,8 @@ public class Follow implements Serializable {
 	}
 
 	/**
-	 * @param lastSpot the lastSpot to set
+	 * @param lastSpot
+	 *            the lastSpot to set
 	 */
 	public void setLastSpot(String lastSpot) {
 		this.lastSpot = lastSpot;
@@ -98,70 +103,70 @@ public class Follow implements Serializable {
 	}
 
 	/**
-     * Returns the key.
-     *
-     * @return the key
-     */
-    public Key getKey() {
-        return key;
-    }
+	 * Returns the key.
+	 * 
+	 * @return the key
+	 */
+	public Key getKey() {
+		return key;
+	}
 
-    /**
-     * Sets the key.
-     *
-     * @param key
-     *            the key
-     */
-    public void setKey(Key key) {
-        this.key = key;
-    }
+	/**
+	 * Sets the key.
+	 * 
+	 * @param key
+	 *            the key
+	 */
+	public void setKey(Key key) {
+		this.key = key;
+	}
 
-    /**
-     * Returns the version.
-     *
-     * @return the version
-     */
-    public Long getVersion() {
-        return version;
-    }
+	/**
+	 * Returns the version.
+	 * 
+	 * @return the version
+	 */
+	public Long getVersion() {
+		return version;
+	}
 
-    /**
-     * Sets the version.
-     *
-     * @param version
-     *            the version
-     */
-    public void setVersion(Long version) {
-        this.version = version;
-    }
+	/**
+	 * Sets the version.
+	 * 
+	 * @param version
+	 *            the version
+	 */
+	public void setVersion(Long version) {
+		this.version = version;
+	}
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((key == null) ? 0 : key.hashCode());
-        return result;
-    }
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((key == null) ? 0 : key.hashCode());
+		return result;
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        Follow other = (Follow) obj;
-        if (key == null) {
-            if (other.key != null) {
-                return false;
-            }
-        } else if (!key.equals(other.key)) {
-            return false;
-        }
-        return true;
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		Follow other = (Follow) obj;
+		if (key == null) {
+			if (other.key != null) {
+				return false;
+			}
+		} else if (!key.equals(other.key)) {
+			return false;
+		}
+		return true;
+	}
 }

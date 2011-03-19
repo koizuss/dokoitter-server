@@ -1,6 +1,6 @@
 package com.appspot.dokoitter.server.meta;
 
-//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2011-03-19 18:41:43")
+//@javax.annotation.Generated(value = { "slim3-gen", "@VERSION@" }, date = "2011-03-20 00:57:12")
 /** */
 public final class UserMeta extends org.slim3.datastore.ModelMeta<com.appspot.dokoitter.server.model.User> {
 

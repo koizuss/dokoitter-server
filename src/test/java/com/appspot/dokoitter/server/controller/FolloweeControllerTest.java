@@ -34,5 +34,9 @@ public class FolloweeControllerTest extends ControllerTestCase {
         assertThat(controller, is(notNullValue()));
         assertThat(tester.isRedirect(), is(false));
         assertThat(tester.getDestinationPath(), is(nullValue()));
+        
+        System.out.println("FolloweeControllerTest#run");
+        System.out.println(tester.response.getOutputAsString());
+        System.out.println("----------------------------------");
     }
 }
