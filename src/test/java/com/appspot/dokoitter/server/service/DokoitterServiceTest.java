@@ -127,7 +127,7 @@ public class DokoitterServiceTest extends AppEngineTestCase {
 		follower.setAccount(followerAccount);
 		Datastore.put(user, follower);
 
-		Follow actual = service.follow(account, followerAccount);
+		Follow actual = service.putFollow(account, followerAccount);
 
 		assertThat(actual, is(not(nullValue())));
 		assertThat(actual.getUserRef().getModel().getAccount(), is(account));
@@ -145,7 +145,7 @@ public class DokoitterServiceTest extends AppEngineTestCase {
 		user.setAccount(account);
 		Datastore.put(user);
 
-		service.follow(account, followerAccount);
+		service.putFollow(account, followerAccount);
 	}
 
 	@Test(expected = IllegalStateException.class)
@@ -160,8 +160,8 @@ public class DokoitterServiceTest extends AppEngineTestCase {
 		follower.setAccount(followerAccount);
 		Datastore.put(user, follower);
 
-		service.follow(account, followerAccount);
-		service.follow(account, followerAccount);
+		service.putFollow(account, followerAccount);
+		service.putFollow(account, followerAccount);
 	}
 
 	@Test
@@ -178,7 +178,7 @@ public class DokoitterServiceTest extends AppEngineTestCase {
 
 		tester.tearDown();
 		try {
-			service.follow(account, followerAccount);
+			service.putFollow(account, followerAccount);
 		} catch (Exception e) {
 			// NOP
 		}
@@ -186,7 +186,7 @@ public class DokoitterServiceTest extends AppEngineTestCase {
 
 		Datastore.put(user, follower);
 
-		Follow actual = service.follow(account, followerAccount);
+		Follow actual = service.putFollow(account, followerAccount);
 
 		assertThat(actual, is(not(nullValue())));
 		assertThat(actual.getUserRef().getModel().getAccount(), is(account));

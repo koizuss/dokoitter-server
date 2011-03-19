@@ -44,7 +44,7 @@ public class DokoitterService {
 		}
 	}
 
-	public Follow follow(String account, String followerAccount) throws Exception {
+	public Follow putFollow(String account, String followerAccount) throws Exception {
 
 		User user = getUser(account);
 		
