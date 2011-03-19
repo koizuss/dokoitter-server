@@ -35,6 +35,10 @@ public class JsonService {
 				ModelRef modelRef = (ModelRef)value;
 				return modelRef.getModelClass().cast(modelRef.getModel());
 			}
+			if(value instanceof Enum){
+				return ((Enum)value).name();
+			}
+			
 			return super.preformat(context, value);
 		}
 	};

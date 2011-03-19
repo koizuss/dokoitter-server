@@ -8,7 +8,6 @@ import java.util.Map;
 import org.slim3.datastore.Datastore;
 import org.slim3.datastore.GlobalTransaction;
 
-import com.appspot.dokoitter.server.exception.ApplicationException;
 import com.appspot.dokoitter.server.model.Follow;
 import com.appspot.dokoitter.server.model.User;
 import com.appspot.dokoitter.server.meta.FollowMeta;
@@ -21,8 +20,7 @@ public class DokoitterService {
 				UserMeta.get().account.equal(account)).asList();
 
 		if (users.size() < 1) {
-			throw new IllegalStateException("user not found account: "
-					+ account);
+			throw new IllegalStateException("user not found");
 		}
 
 		return users.get(0);
@@ -46,10 +44,16 @@ public class DokoitterService {
 		}
 	}
 
-	public Follow putFollow(String account, String followerAccount) throws Exception {
+	public Follow follow(String account, String followerAccount) throws Exception {
 
 		User user = getUser(account);
-		User follower = getUser(followerAccount);
+		
+		User follower;
+		try{
+			follower = getUser(followerAccount);
+		}catch (IllegalStateException e) {
+			throw new IllegalStateException("follower not found", e);
+		}
 
 		Follow follow = new Follow();
 		follow.getUserRef().setModel(user);
@@ -58,8 +62,7 @@ public class DokoitterService {
 		String uniqueValue = account + ">" + followerAccount;
 
 		if (!Datastore.putUniqueValue(Follow.class.toString(), uniqueValue)) {
-			throw new IllegalStateException("follower exists account: "
-					+ followerAccount);
+			throw new IllegalStateException("exists follow");
 		}
 
 		try {
@@ -71,7 +74,7 @@ public class DokoitterService {
 		}
 	}
 
-	public List<User> getFollower(String account) throws ApplicationException {
+	public List<User> getFollower(String account) {
 		User user = getUser(account);
 		List<User> followers = new ArrayList<User>();
 
@@ -95,12 +98,14 @@ public class DokoitterService {
 
 	public List<Map<String, Object>> getFollowee(String account) {
 		User user = getUser(account);
+		UserMeta userMeta = UserMeta.get();
+		FollowMeta followMeta = FollowMeta.get();
 		List<Map<String, Object>> followees = new ArrayList<Map<String, Object>>();
 		for (Follow follow : Datastore.query(Follow.class).filter(
-				FollowMeta.get().followerRef.equal(user.getKey())).asList()) {
+				followMeta.followerRef.equal(user.getKey())).asList()) {
 			Map<String, Object> followee = new HashMap<String, Object>();
-			followee.put("followee", follow.getUserRef().getModel());
-			followee.put("status", follow.getStatus().name());
+			followee.put(userMeta.account.getName(), follow.getUserRef().getModel());
+			followee.put(followMeta.status.getName(), follow.getStatus());
 			followees.add(followee);
 		}
 

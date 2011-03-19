@@ -8,7 +8,7 @@ import com.appspot.dokoitter.server.service.DokoitterService;
 import com.appspot.dokoitter.server.service.GoogleAuthService;
 import com.appspot.dokoitter.server.service.JsonService;
 
-public class ApproveController extends Controller {
+public class ReceiveController extends Controller {
 
     @Override
     public Navigation run() throws Exception {

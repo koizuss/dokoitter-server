@@ -5,12 +5,12 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 
-public class ApproveControllerTest extends ControllerTestCase {
+public class ReceiveControllerTest extends ControllerTestCase {
 
     @Test
     public void run() throws Exception {
         tester.start("/approve");
-        ApproveController controller = tester.getController();
+        ReceiveController controller = tester.getController();
         assertThat(controller, is(notNullValue()));
         assertThat(tester.isRedirect(), is(false));
         assertThat(tester.getDestinationPath(), is(nullValue()));

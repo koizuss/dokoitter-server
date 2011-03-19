@@ -11,7 +11,7 @@ public class FollowController extends Controller {
 
 	@Override
 	public Navigation run() throws Exception {
-		new JsonService(new DokoitterService().putFollow(GoogleAuthService
+		new JsonService(new DokoitterService().follow(GoogleAuthService
 				.getAccount(), asString("follower"))).out(response);
 		return null;
 	}
